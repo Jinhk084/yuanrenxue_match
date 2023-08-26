@@ -22,7 +22,7 @@ all_sum = 0
 
 def get_js():
     # 请求js代码
-    url = "https://match.yuanrenxue.com/api/match/14/m"
+    url = "https://match.yuanrenxue.cn/api/match/14/m"
     res = session.get(url)
     res_text = res.text
 
@@ -71,7 +71,7 @@ def get(v14, v142, page):
     session.cookies.update({'m': cookie_m})
 
     # 请求数据
-    url = 'https://match.yuanrenxue.com/api/match/14?page=' + str(page)
+    url = 'https://match.yuanrenxue.cn/api/match/14?page=' + str(page)
     res = session.get(url)
     print(res.text)
 

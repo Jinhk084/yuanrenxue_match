@@ -11,7 +11,7 @@ session.headers = headers
 
 
 def get_cookie():
-    url = 'https://match.yuanrenxue.com/match/9'
+    url = 'https://match.yuanrenxue.cn/match/9'
     res = session.get(url)
 
     # 获取动态关键的for循环代码
@@ -41,7 +41,7 @@ def get_cookie():
 
 def get_data(page):
     global all_sum
-    url = 'https://match.yuanrenxue.com/api/match/9?page=' + str(page)
+    url = 'https://match.yuanrenxue.cn/api/match/9?page=' + str(page)
     res = session.get(url)
     print(res.text)
 
