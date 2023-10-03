@@ -1,4 +1,4 @@
-# 猿人学第1届Web端JSN逆向题目
+# 猿人学第1届Web端JS逆向题目
 
 B站附有题目讲解视频: https://space.bilibili.com/52512037
 
