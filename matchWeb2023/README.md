@@ -1,4 +1,4 @@
-# 猿人学第二届Web端JS比赛题目
+# 猿人学第2届Web端JS逆向题目
 
 网站: https://match2023.yuanrenxue.cn/
 
