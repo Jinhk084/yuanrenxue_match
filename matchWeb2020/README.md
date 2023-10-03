@@ -1,4 +1,4 @@
-# 猿人学第一届Web端口JS比赛题目
+# 猿人学第一届Web端JS比赛题目
 
 B站附有题目讲解视频: https://space.bilibili.com/52512037
 
