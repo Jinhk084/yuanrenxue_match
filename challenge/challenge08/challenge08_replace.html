@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>
+        第八题本地替换-Jinhk
+    </title>
+    <script>
+        /* 自己添加的代码 */
+        // debugger;
+        setInterval = function () {
+        };
+    </script>
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?337e99a01a907a08d00bed4a1a52e35d";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    <script src="/static/boke/js/jquery-3.4.1.min.js">
+    </script>
+    <script type="text/javascript" src="/static/boke/js/jquery.form.js">
+    </script>
+    <link rel="stylesheet" href="/static/boke/css/font-awesome.css">
+    <script src="/static/boke/js/font-awesome.js"></script>
+    <link rel="stylesheet" href="/static/asset/css/modallayer.min.css">
+    <script src="/static/asset/js/modallayer-ie.min.js">
+    </script>
+    <script src="/static/formly/formly.js">
+    </script>
+    <link rel="stylesheet" href="/static/formly/formly.css">
+    <style>
+        h1 {
+            color: #45d9ff
+        }
+
+        form {
+            margin-top: 20px
+        }
+    </style>
+    <script>
+        // var x = document.createElement('div');
+        // var isOpening = false;
+        // Object.defineProperty(x, 'id', {
+        //     get: function () {
+        //         window.location = 'about:blank';
+        //         window.threshold = 0;
+        //     }
+        // });
+        // console.info(x);
+    </script>
+</head>
+<body>
+<script>
+    // Function.prototype.constructor_back = Function.prototype.constructor;
+    // Function.prototype.constructor = function () {
+    //     if (arguments && typeof arguments[0] === 'string') {
+    //         //alert("new function: "+ arguments[0]);
+    //         if ("debugger" === arguments[0]) {
+    //             arguments[0] = "console.log('pass log')";
+    //         }
+    //     }
+    //     return Function.prototype.constructor_back.apply(this, arguments);
+    // }
+</script>
+<h1>
+    请于控制台中输入window.threshold，并将返回结果填入答案中
+</h1>
+<form method="post" id="ajaxForm" action="/challenge/api/check" style="text-align: center">
+    答案：
+    <input type="text" name="anw" placeholder="请输入答案">
+    <br>
+    <input type="hidden" name="id" value="8">
+    <input type="button" value="提交" id="ajaxSubmit">
+    <input type="reset" value="重置">
+</form>
+</body>
+<script type="text/javascript">
+    /* 不用AST也可以,打上script断点慢慢调试 */
+    var _$ob = function (a, b) {
+    };
+    var _$oe = function () {
+        var b = !![];
+        return function (c, d) {
+            var f = b ? function () {
+                if (d) {
+                    var g = d['apply'](c, arguments);
+                    d = null;
+                    return g;
+                }
+            } : function () {
+            };
+            b = ![];
+            return f;
+        };
+    }();
+    (function () {
+        _$oe(this, function () {
+            var b = new RegExp("function *\\( *\\)");
+            var c = new RegExp("\\+\\+ *(?:[a-zA-Z_$][0-9a-zA-Z_$]*)", 'i');
+            var d = _$og("init");
+            if (!b["test"](d + "chain") || !c["test"](d + "input")) {
+                d('0');
+            } else {
+                _$og();
+            }
+        })();
+    })();
+    var _$of = 160;
+    window["threshold"] = 160;
+    window["setInterval"](function () {
+    }, 0.25);
+
+    function _$og(a) {
+        function c(d) {
+            if (typeof d === "string") {
+                return function (g) {
+                }["constructor"]("while (true) {}")["apply"]("counter");
+            } else {
+                if (('' + d / d)["length"] !== 1 || d % 20 === 0) {
+                    (function () {
+                        return !![];
+                    })['constructor']("debugger")['call']("action");
+                } else {
+                    (function () {
+                        return ![];
+                    })["constructor"]("debugger")["apply"]("stateObject");
+                }
+            }
+            c(++d);
+        }
+
+        try {
+            if (a) {
+                return c;
+            } else {
+                // c(0); // 无限debugger进入的地方
+            }
+        } catch (e) {
+        }
+    }
+</script>
+<script>
+    successAlert = function () {
+        let option = {
+            hook: {
+                initStart: function () {
+                }
+            },
+            popupTime: 0,
+            type: 'alert',
+            title: '答案正确',
+            dragOverflow: true,
+            content: '<i class="fas fa-check" style="color: deepskyblue"></i>答案正确！即将跳转题目列表页',
+        };
+        ModalLayer.alert(option)
+    };
+    failedAlert = function (message) {
+        let option = {
+            popupTime: 2,
+            hook: {
+                initStart: function () {
+                }
+            },
+            displayProgressBar: true,
+            displayProgressBarPos: 'top',
+            displayProgressBarColor: 'red',
+            content: '<i class="fas fa-times" style="color: red"></i>' + message,
+        };
+        ModalLayer.msg(option)
+    };
+    $(function () {
+        $("#ajaxSubmit").on("click", function () {
+            $("#ajaxForm").ajaxSubmit({
+                beforeSubmit: function () {
+                },
+                success: function (data) {
+                    result = data.status_code;
+                    if (result === "1") {
+                        successAlert();
+                        window.setTimeout("window.location='/challenge'", 2000)
+                    } else if (result === "2") {
+                        failedAlert('请先登录再尝试提交答案');
+                        window.setTimeout("window.location='/challenge/login'", 2000)
+                    } else if (result === "3") {
+                        failedAlert('您提交答案的频率过高，请休息一下，好好想想答案');
+                    } else {
+                        failedAlert('答案验证失败，再不...再想想？')
+                    }
+                }
+            })
+        })
+    })
+</script>
+<script>
+    $(document).ready(function () {
+        $('#ajaxForm').formly({
+            'theme': 'Light'
+        }, function (e) {
+            $('.callback').html(e)
+        })
+    });
+</script>
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js'
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js'
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+        // window.threshold = 0;
+    })();
+</script>
+<script>
+    var element = new Image();
+    setInterval(function () {
+        checkStatus = 'off';
+        console.debug(element);
+        document.querySelector('#devtool-status').innerHTML = checkStatus;
+    }, 50)
+</script>
+
+</html>
