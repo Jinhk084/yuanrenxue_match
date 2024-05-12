@@ -1,0 +1,12 @@
+
+参考文章:
+https://blog.csdn.net/qq_35699583/article/details/113060927
+https://blog.csdn.net/qianpou/article/details/126954559
+https://blog.csdn.net/py_tiro/article/details/133530381
+
+
+'调用函数: ' + we[1]
+be, n.n, Fe, i.apply.call(be, n.n, Fe)
+
+be, we[0], Fe, i.apply.call(be, we[0], Fe)
+
