@@ -1,34 +1,27 @@
-import requests
-import execjs
 import numpy as np
 
-headers = {
-    "user-agent": "yuanrenxue.project",
-}
-cookies = {
-    "sessionid": "we6oumc7gkkbyyhxggmwc4sol0g38k1g",
-}
-url = "https://match.yuanrenxue.com/api/match/5"
+from matchWeb2020.config import BASE_URL, get_session, compile_js, verify_answers
 
-with open('match_05.js', 'r', encoding='utf-8') as f:
-    jsCode = f.read()
+js_compiler = compile_js('match_05.js')
+params = js_compiler.call('get_params')
 
-Func = execjs.compile(jsCode)
-par = Func.call('get_params')
-# 更新cookie
-cookies['RM4hZBv0dDon443M'] = par['RM4hZBv0dDon443M']
+session = get_session()
+session.cookies.update({'RM4hZBv0dDon443M': params['RM4hZBv0dDon443M']})
 
 allData = []
 for page in range(1, 6):
-    params = {
-        "page": str(page),
-        "m": par['url_m'],
-        "f": par['url_m']
-    }
-    res = requests.get(url, headers=headers, cookies=cookies, params=params)
-    print(res.text)
-    for data in res.json()['data']:
+    res = session.get(url=f"{BASE_URL}/api/match/5",
+                      params={
+                          'page': f'{page}',
+                          'm': params['url_m'],
+                          'f': params['url_m']
+                      })
+
+    resp_json = res.json()
+    print(resp_json)
+    for data in resp_json['data']:
         allData.append(data['value'])
 
-max5 = np.sort(allData)[-5:]  # 升序
-print('5名直播间热度的加和:', sum(max5))
+max5_sum = sum(np.sort(allData)[-5:])  # 升序
+print('前5名直播间热度和:', max5_sum)
+verify_answers(session, max5_sum, 5)

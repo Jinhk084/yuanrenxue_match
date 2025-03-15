@@ -1,18 +1,10 @@
-import requests
-import hashlib
-import base64
 import re
+import base64
+import hashlib
 
-'''
-需要解决:
-    1.哪些图片是隐藏的
-    2.图片怎么映射成数字
-    3.解决图片的偏移
-'''
-headers = {
-    'User-Agent': 'yuanrenxue.project',
-    'Cookie': 'sessionid=mjjtd90ctnt3nrtbrzlw6k6ydd4ur05f'
-}
+from matchWeb2020.config import BASE_URL, get_session, verify_answers
+
+session = get_session()
 img_dict = {
     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAdCAYAAACqhkzFAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAMTSURBVEhLrZY/TBNRHMe/bY82LeGA0Dp4NTGYqO1gdKEMwmQcGh38M5CQlGDSwWiMAwwYg2iCJsZJQ9CJ0ETsQMJgwuagLIUFXIAFXNoYcqDloLRXrq3v7v3aXktbSPCTXO77fZRvf/feu9+r5dz5iwX8R+oESigMPka6/wb2vSJUBx+1QoVD3kTz7DScb+f4YBVHA6U+ZKLPsON1IE9DtbDLP9AxEIawRgOEle4cKYSD+ZeQq8IcKquMXTbyOllPL7aiEWgSDRCmQAnahyHsiGQZruUvkIKXcObyFeM62zcOd1ylvwJ5MYDkuxA5Tjlw8A2S12iyGM7YODrujsFqfqTFCJw9L+CWyTPS3QPIBMgwKFBC9n4AaW4AdQVtQxEy1czBObkIJznAi9TDO6SLgVIYqt9QBq5YFEKCTC2momg2VXngD5bmnAc+uIqUIXQUOL/X3hJl5mHfUEgzPJ04pMUxAnN+CYeG1UlAmCLZANtqAk2kARG5m1zxQI9paWUZAsmGsArLnxOh0ZSxwCBypjwo2zQPxzCTgJ2kTtbbZ9zZ/7pRKO8WOOWqrX9iePyJiqnNGgTTuhRhgT5o5kc+JaeosDYssHbpx+OtXEziSIWqx0fqOFpg7ns2Zd24s8B1WE0V5h2mJW/ELTc0kjo2Zcm4s8ClikCIlR+si59tZpL66yosc2U8clM8bhgDkfVFUzuqR569rqXOqG7CPsOlEWiJJSraUaa/i3Q9upC94CHNCtr4WXoN+aJMzcFlakd73eGG5wnuhZHykmZ1tnx9TboYqDfNWLxoWDvqhfK+h0w1Pcg87cUBOavMmu1HMoxShuXJNNpNi7N3ewLJTyEUzIdQIIT0wgQ7EcmzxWifZMcEOZ3KY3Qwgp3RQOnbOfqJx5XGtlSOS4aK1tlHEIcXyHNsrW0dY6SBFX0ufShc70S21OwE5AR+lb+ZVfb5OVpGviGTTkHeSmBfScJqtdX55SAFoY0OsMXxISM6SvvNrshwrS7A9WoENupyv+O/oGm831sslno/RU6OsvsHu3+3yQH/AOyW6SvqnweCAAAAAElFTkSuQmCC': 0,
     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAcCAYAAACOGPReAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAD0SURBVEhLY5RVUPvPQGXABKUJAA2GvzP3Mry6f5PhzfI4qBhuQNjQqD6Gzxc3Mjxzk2H4CRUiBHAYKs3wP7Gd4evhSwzPWr0ZPvBBhYkEqIaaBzL8nrmS4f3FfQzP6oIY3smwM/yFSpECkAyNY/g2q4PhhZsBwxegy/5BRZlfP2HgIdbfUIAnTD8xCGyuZ5AyW8jATqmhzD9fMwjumsUgbWPKwJu3AipKGkAydC8DZ24sg5SGDQNPei8D01OoMBkAydCnDIyHTkHZlAE8YUo+GDWU+mAEGfq46RCUhQAUGypbZwdlIcBoRFEfjBpKfUADQxkYAKYHOb9g+7HMAAAAAElFTkSuQmCC': 1,
@@ -27,49 +19,28 @@ img_dict = {
 }
 
 
-def get_img(page):
-    url = "https://match.yuanrenxue.com/api/match/4"
-    params = {
-        "page": str(page)
-    }
-    res = requests.get(url, headers=headers, params=params)
-    res_json = res.json()
-    info_str = res_json['info']
+def get_a_page_of_and(one_page_info, md5_value):
+    global img_dict
 
-    # 获取加密字符串
-    key = res_json['key']
-    value = res_json['value']
-    encrypt_str = key + value
-
-    # 进行base64编码后,再进行md5加密
-    b64_str = base64.b64encode(encrypt_str.encode()).decode('utf-8')
-    md5_str = hashlib.md5(b64_str.replace('=', '').encode()).hexdigest()
-
-    return md5_str, info_str
-
-
-def svg_img(md5_str, info_str):
-    data_10 = re.findall('<td>(.*?)</td>', info_str)
-
+    data_10 = re.findall('<td>(.*?)</td>', one_page_info)
     one_page_sum = 0
-    for data_1 in data_10:
-        info_list = re.findall('<img src="(.*?)" class="img_number (.*?)" style="left:(.*?)px">', data_1)
-
+    for data in data_10:
+        item_list = re.findall('<img src="(.*?)" class="img_number (.*?)" style="left:(.*?)px">', data)
         num_list = []  # 实际数据
         svg_list = []  # 偏移量
-        for info in info_list:
-            if md5_str != info[1]:
+        for item in item_list:
+            if md5_value != item[1]:
                 # 实际数据
-                num = img_dict[info[0]]
+                num = img_dict[item[0]]
                 num_list.append(num)
                 # 偏移量
-                num_svg = int(float(info[2]) / 11.5)
+                num_svg = int(float(item[2]) / 11.5)
                 svg_list.append(num_svg)
 
         # 偏移操作
-        new_list = ['0'] * len(num_list)  # ['0', '0', '0', '0'] -- > 6081
-        for index in range(len(num_list)):  # index = 1
-            id_ = index + svg_list[index]  # 0
+        new_list = ['0'] * len(num_list)
+        for index in range(len(num_list)):
+            id_ = index + svg_list[index]
             new_list[id_] = str(num_list[index])
 
         # 求和
@@ -78,16 +49,22 @@ def svg_img(md5_str, info_str):
     return one_page_sum
 
 
-def main():
-    all_sum = 0
-    for page in range(1, 6):
-        md5_str, info_str = get_img(page)
-        one_page_sum = svg_img(md5_str, info_str)
-        print(f'第-{page}-页总和:', one_page_sum)
-        all_sum += one_page_sum
-
-    print('5页总和: ', all_sum)
+def parse_resp(response):
+    resp_json = response.json()
+    return resp_json['key'], resp_json['value'], resp_json['info']
 
 
-if __name__ == '__main__':
-    main()
+page5_sum = 0
+for page in range(1, 6):
+    resp = session.get(url=f'{BASE_URL}/api/match/4',
+                       params={'page': f'{page}', })
+    key, value, info = parse_resp(resp)
+
+    # 进行base64编码后,再进行md5加密
+    b64_str = base64.b64encode((key + value).encode()).decode('utf-8')
+    md5_str = hashlib.md5(b64_str.replace('=', '').encode()).hexdigest()
+    print(f'({key} + {value}) --hash--> {md5_str}')
+    page5_sum += get_a_page_of_and(info, md5_str)
+
+print(f'5页总和: {page5_sum}')
+verify_answers(session, page5_sum, 4)
