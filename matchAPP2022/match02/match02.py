@@ -1,7 +1,14 @@
 import time
-import subprocess
+import jpype
 
 from matchAPP2022.config import get_session, BASE_URL, verify_answers
+
+# 启动Java虚拟机
+jpype.startJVM(
+    jpype.getDefaultJVMPath(),
+    classpath=['match02.jar']
+)
+JavaClass = jpype.JClass('com.yuanrenxue.app2022.match02.MainActivity')
 
 session = get_session()
 page100Sum = 0
@@ -10,15 +17,7 @@ for page in range(1, 101):
     plain_text = f'{page}:{timeStamp}'
 
     #
-    result = subprocess.run(
-        ['java', '-jar', 'unidbg-android.jar', plain_text],
-        check=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        encoding="utf-8",
-    )
-    sign = result.stdout.strip()
+    sign = str(JavaClass.getSign(plain_text)).strip()
 
     #
     resp = session.post(url=f'{BASE_URL}/app2',
@@ -35,5 +34,6 @@ for page in range(1, 101):
     for data in resp_json['data']:
         page100Sum += int(data['value'].strip())
 
+jpype.shutdownJVM()
 # print('100页总和:', page100Sum)
 verify_answers(session, page100Sum, 2)

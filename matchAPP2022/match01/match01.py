@@ -8,7 +8,7 @@ page100Sum = 0
 for page in range(1, 101):
     timeStamp = int(time.time())
     result = subprocess.run(
-        ['java', '-jar', 'AppMatch2020.jar', str(page), str(timeStamp)],
+        ['java', '-jar', 'match01.jar', str(page), str(timeStamp)],
         check=True,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,

@@ -4,12 +4,14 @@ import java.util.ArrayList;
 
 public class Match01 {
     public static void main(String[] args) {
-        String page = args[0];
-        String timeStamp = args[1];
-        String params = "page=" + page + timeStamp;
-        String result = new Sign().sign(params.getBytes());
-        System.out.println(result);
-        // System.out.println(new Sign().sign("page=71743861270".getBytes()));// 316fbdca2c5dd2862cc8e86281e7bda9
+        String params = "page=" + args[0] + args[1];
+        String sign = sign(params); // 316fbdca2c5dd2862cc8e86281e7bda9
+        // String sign = sign("page=71743861270"); // 316fbdca2c5dd2862cc8e86281e7bda9
+        System.out.println(sign);
+    }
+
+    public static String sign(String input) {
+        return new Sign().sign(input.getBytes());
     }
 }
 
